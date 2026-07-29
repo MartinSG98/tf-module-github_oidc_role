@@ -1,11 +1,11 @@
 output "plan_role_arn" {
-  value       = aws_iam_role.plan.arn
-  description = "ARN of the role assumed by GitHub Actions to run `terraform plan`"
+  value       = one(aws_iam_role.plan[*].arn)
+  description = "ARN of the role assumed by GitHub Actions to run `terraform plan` (null when create_plan_role is false)"
 }
 
 output "plan_role_name" {
-  value       = aws_iam_role.plan.name
-  description = "Name of the plan role"
+  value       = one(aws_iam_role.plan[*].name)
+  description = "Name of the plan role (null when create_plan_role is false)"
 }
 
 output "apply_role_arn" {

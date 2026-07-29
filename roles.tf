@@ -1,6 +1,7 @@
 # Plan role - assumed by GitHub Actions to run `terraform plan`.
 # Trust limited to the configured GitHub repo and the (default: any-branch / pull-request) sub claims.
 resource "aws_iam_role" "plan" {
+  count                = var.create_plan_role ? 1 : 0
   name                 = "${var.project_name}_gha_plan-role-${module.helpers.name_suffix}"
   description          = "GitHub Actions OIDC role for `terraform plan` of ${var.project_name}"
   max_session_duration = var.max_session_duration

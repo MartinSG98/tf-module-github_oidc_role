@@ -58,6 +58,18 @@ variable "apply_subject_claims" {
   default     = []
 }
 
+variable "existing_oidc_provider_arn" {
+  type        = string
+  description = "ARN of an existing GitHub OIDC provider to trust, skipping the data-source lookup. Pass this (e.g. from another instance's github_oidc_provider_arn output) when the provider is created in the same apply, since a data lookup would fail at plan time."
+  default     = null
+}
+
+variable "create_plan_role" {
+  type        = bool
+  description = "Whether to create the plan role. Set false for projects that only need an apply/deploy role (e.g. CI that pushes artifacts rather than running terraform plan)."
+  default     = true
+}
+
 variable "create_oidc_provider" {
   type        = bool
   description = "Whether to create the account-wide GitHub OIDC provider. Set to true on the FIRST project bootstrapping CI in an account. If false, the provider must already exist (looked up via data source)."

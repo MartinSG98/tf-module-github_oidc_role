@@ -3,9 +3,9 @@
 # the 6,144-char per-policy limit and lets each logical area (state, IAM, networking, S3, ...) be
 # reasoned about and audited independently.
 
-# Plan policies
+# Plan policies (only when the plan role exists)
 resource "aws_iam_policy" "plan" {
-  for_each = var.plan_policies
+  for_each = var.create_plan_role ? var.plan_policies : {}
 
   name        = "${var.project_name}_gha_plan_${each.key}-pol-${module.helpers.name_suffix}"
   description = "Plan-time permissions (${each.key}) for ${var.project_name} GitHub Actions"
@@ -15,16 +15,16 @@ resource "aws_iam_policy" "plan" {
 }
 
 resource "aws_iam_role_policy_attachment" "plan_custom" {
-  for_each = var.plan_policies
+  for_each = var.create_plan_role ? var.plan_policies : {}
 
-  role       = aws_iam_role.plan.name
+  role       = aws_iam_role.plan[0].name
   policy_arn = aws_iam_policy.plan[each.key].arn
 }
 
 resource "aws_iam_role_policy_attachment" "plan_managed" {
-  for_each = toset(var.plan_managed_policy_arns)
+  for_each = var.create_plan_role ? toset(var.plan_managed_policy_arns) : []
 
-  role       = aws_iam_role.plan.name
+  role       = aws_iam_role.plan[0].name
   policy_arn = each.value
 }
 

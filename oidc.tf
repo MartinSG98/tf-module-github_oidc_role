@@ -20,7 +20,7 @@ resource "aws_iam_openid_connect_provider" "github" {
 }
 
 data "aws_iam_openid_connect_provider" "github" {
-  count = var.create_oidc_provider ? 0 : 1
+  count = (!var.create_oidc_provider && var.existing_oidc_provider_arn == null) ? 1 : 0
 
   url = "https://${local.github_oidc_url}"
 }

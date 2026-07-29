@@ -7,11 +7,13 @@ locals {
 
   github_oidc_url = "token.actions.githubusercontent.com"
 
-  # Resolve the OIDC provider ARN from either the resource we created (if create_oidc_provider) or
-  # from the existing account-wide provider via data source. one() returns the single element of a
-  # list with 0 or 1 items, or null if empty - perfect for count-based optional resources.
+  # Resolve the OIDC provider ARN: the resource we created (if create_oidc_provider), an ARN passed
+  # in by the caller (existing_oidc_provider_arn), or the existing account-wide provider via data
+  # source. one() returns the single element of a list with 0 or 1 items, or null if empty - perfect
+  # for count-based optional resources.
   github_oidc_arn = coalesce(
     one(aws_iam_openid_connect_provider.github[*].arn),
+    var.existing_oidc_provider_arn,
     one(data.aws_iam_openid_connect_provider.github[*].arn),
   )
 

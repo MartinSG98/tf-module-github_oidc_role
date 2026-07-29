@@ -41,6 +41,12 @@ optionally create that provider on the first project bootstrapping CI in an acco
 * `apply_subject_claims`: same, for the apply role. Defaults to `refs/heads/main` only.
 * `create_oidc_provider`: bool; create the account-wide GitHub OIDC provider. Set to `true` only on
   the first stack bootstrapping CI in the account; default `false`.
+* `create_plan_role`: bool; default `true`. Set `false` for projects that only need an apply/deploy
+  role (e.g. CI that pushes artifacts rather than running `terraform plan`). The `plan_role_*`
+  outputs are null in that case.
+* `existing_oidc_provider_arn`: ARN of an existing GitHub OIDC provider to trust, skipping the
+  data-source lookup. Pass this (e.g. from another instance's `github_oidc_provider_arn` output)
+  when the provider is created in the same apply, since a data lookup would fail at plan time.
 * `plan_policies`: map of `name -> JSON IAM policy doc` - one customer-managed policy per entry.
   Should grant only the read-only permissions needed for `terraform plan`.
 * `apply_policies`: same shape; should grant the full set required for `terraform apply`.
