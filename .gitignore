@@ -1,0 +1,6 @@
+# OS droppings
+.DS_Store
+Thumbs.db
+
+# Terraform ephemeral data
+.terraform/
